@@ -1,0 +1,28 @@
+name: Patch Notes to Discord
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Dies führt das Skript jede Stunde aus. Du kannst den Zeitplan nach Belieben anpassen.
+  workflow_dispatch:  # Ermöglicht es dir, die Action manuell auszulösen.
+
+jobs:
+  send-patch-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Run the script to fetch patch notes
+        run: |
+          python patchscript.py
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
